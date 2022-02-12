@@ -96,12 +96,16 @@ module "aws_organizations_and_sso" {
 |------|-------------|------|---------|:--------:|
 | <a name="input_default_tags"></a> [default\_tags](#input\_default\_tags) | Resource tags to apply across all resources | `map(string)` | <pre>{<br>  "project": "terraform-aws-organization-and-sso"<br>}</pre> | no |
 | <a name="input_enable_sso"></a> [enable\_sso](#input\_enable\_sso) | Enable AWS SSO | `bool` | `true` | no |
-| <a name="input_organization_config"></a> [organization\_config](#input\_organization\_config) | Organization configuration | `map(any)` | <pre>{<br>  "units": {}<br>}</pre> | no |
+| <a name="input_organization_config"></a> [organization\_config](#input\_organization\_config) | Organization configuration | `any` | <pre>{<br>  "units": {}<br>}</pre> | no |
 | <a name="input_region"></a> [region](#input\_region) | AWS Region | `string` | `"eu-west-2"` | no |
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_aws_organizations_account"></a> [aws\_organizations\_account](#output\_aws\_organizations\_account) | Attributes for the AWS Organization Accounts (`aws_organizations_account`): https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/organizations_account#attributes-reference |
+| <a name="output_aws_organizations_organization"></a> [aws\_organizations\_organization](#output\_aws\_organizations\_organization) | Attributes for the AWS Organization (`aws_organizations_organization`: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/organizations_organization#attributes-reference) |
+| <a name="output_aws_organizations_organizational_unit"></a> [aws\_organizations\_organizational\_unit](#output\_aws\_organizations\_organizational\_unit) | Atrributes for the AWS Organizational Units (`aws_organizations_organizational_unit`): https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/organizations_organizational_unit#attributes-reference |
 <!-- END_TF_DOCS -->
 
 [1]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_org.html
