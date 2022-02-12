@@ -6,7 +6,7 @@ variable "region" {
 
 variable "organization_config" {
   description = "Organization configuration"
-  type        = map(any)
+  type        = any
   default = {
     units = {
     }
