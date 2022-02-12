@@ -13,6 +13,16 @@ jobs:
     - name: Check out code
       uses: actions/checkout@v1
 
+    - name: Check for terraform version mismatch
+      run: |
+        DOTFILE_VERSION=$(cat .terraform-version)
+        TERRAFORM_IMAGE_REFERENCES=$(grep "uses: docker://hashicorp/terraform" .github/workflows/main.yml | grep -v TERRAFORM_IMAGE_REFERENCES | wc -l | tr -d ' ')
+        if [ "$(grep "docker://hashicorp/terraform:${DOTFILE_VERSION}" .github/workflows/main.yml | wc -l | tr -d ' ')" != "$TERRAFORM_IMAGE_REFERENCES" ]
+        then
+          echo -e "\033[1;31mError: terraform version in .terraform-version file does not match docker://hashicorp/terraform versions in .github/workflows/main.yml"
+          exit 1
+        fi
+
     - name: Run a Terraform init
       uses: docker://hashicorp/terraform:1.1.5
       with:
