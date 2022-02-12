@@ -54,5 +54,7 @@ jobs:
         with:
           working-dir: .
           config-file: .terraform-docs.yml
+          output-file: README.md
+          output-method: inject
           git-push: true
           git-commit-message: "GitHub Action: Generate terraform docs"
