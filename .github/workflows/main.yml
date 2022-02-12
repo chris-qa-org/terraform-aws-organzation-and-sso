@@ -40,3 +40,19 @@ jobs:
       with:
         entrypoint: terraform
         args: fmt -check=true -diff=true
+  generate-terraform-docs:
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Generate Terraform docs
+        uses: terraform-docs/gh-actions@v0.11.0
+        with:
+          working-dir: .
+          config-file: .terraform-docs.yml
+          git-push: true
+          git-commit-message: "GitHub Action: Generate terraform docs"
