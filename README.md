@@ -97,7 +97,7 @@ module "aws_organizations_and_sso" {
 | <a name="input_default_tags"></a> [default\_tags](#input\_default\_tags) | Resource tags to apply across all resources | `map(string)` | <pre>{<br>  "project": "terraform-aws-organization-and-sso"<br>}</pre> | no |
 | <a name="input_enable_sso"></a> [enable\_sso](#input\_enable\_sso) | Enable AWS SSO | `bool` | `true` | no |
 | <a name="input_organization_config"></a> [organization\_config](#input\_organization\_config) | Organization configuration | `any` | <pre>{<br>  "units": {}<br>}</pre> | no |
-| <a name="input_region"></a> [region](#input\_region) | AWS Region | `string` | `"eu-west-2"` | no |
+| <a name="input_region"></a> [region](#input\_region) | AWS Region | `string` | n/a | yes |
 
 ## Outputs
 
