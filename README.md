@@ -128,6 +128,12 @@ module "aws_organizations_and_sso" {
 | [aws_organizations_account.account](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/organizations_account) | resource |
 | [aws_organizations_organization.root](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/organizations_organization) | resource |
 | [aws_organizations_organizational_unit.unit](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/organizations_organizational_unit) | resource |
+| [aws_ssoadmin_account_assignment.assignment](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssoadmin_account_assignment) | resource |
+| [aws_ssoadmin_managed_policy_attachment.attachment](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssoadmin_managed_policy_attachment) | resource |
+| [aws_ssoadmin_permission_set.permission_set](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssoadmin_permission_set) | resource |
+| [aws_ssoadmin_permission_set_inline_policy.policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssoadmin_permission_set_inline_policy) | resource |
+| [aws_identitystore_group.aws](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/identitystore_group) | data source |
+| [aws_ssoadmin_instances.ssoadmin_instances](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ssoadmin_instances) | data source |
 
 ## Inputs
 
@@ -137,6 +143,7 @@ module "aws_organizations_and_sso" {
 | <a name="input_enable_sso"></a> [enable\_sso](#input\_enable\_sso) | Enable AWS SSO | `bool` | `true` | no |
 | <a name="input_organization_config"></a> [organization\_config](#input\_organization\_config) | Organization configuration | `any` | <pre>{<br>  "units": {}<br>}</pre> | no |
 | <a name="input_region"></a> [region](#input\_region) | AWS Region | `string` | n/a | yes |
+| <a name="input_sso_permission_sets"></a> [sso\_permission\_sets](#input\_sso\_permission\_sets) | AWS SSO Permission sets | `any` | `{}` | no |
 
 ## Outputs
 
@@ -145,6 +152,7 @@ module "aws_organizations_and_sso" {
 | <a name="output_aws_organizations_account"></a> [aws\_organizations\_account](#output\_aws\_organizations\_account) | Attributes for the AWS Organization Accounts (`aws_organizations_account`): https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/organizations_account#attributes-reference |
 | <a name="output_aws_organizations_organization"></a> [aws\_organizations\_organization](#output\_aws\_organizations\_organization) | Attributes for the AWS Organization (`aws_organizations_organization`: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/organizations_organization#attributes-reference) |
 | <a name="output_aws_organizations_organizational_unit"></a> [aws\_organizations\_organizational\_unit](#output\_aws\_organizations\_organizational\_unit) | Atrributes for the AWS Organizational Units (`aws_organizations_organizational_unit`): https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/organizations_organizational_unit#attributes-reference |
+| <a name="output_aws_ssoadmin_permission_set"></a> [aws\_ssoadmin\_permission\_set](#output\_aws\_ssoadmin\_permission\_set) | Attributes for the AWS SSO Permition Sets (`aws_ssoadmin_permission_set`): https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssoadmin_permission_set |
 <!-- END_TF_DOCS -->
 
 [1]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_org.html
