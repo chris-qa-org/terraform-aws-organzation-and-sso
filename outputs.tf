@@ -12,3 +12,8 @@ output "aws_organizations_account" {
   description = "Attributes for the AWS Organization Accounts (`aws_organizations_account`): https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/organizations_account#attributes-reference"
   value       = aws_organizations_account.account
 }
+
+output "aws_ssoadmin_permission_set" {
+  description = "Attributes for the AWS SSO Permition Sets (`aws_ssoadmin_permission_set`): https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssoadmin_permission_set"
+  value       = aws_ssoadmin_permission_set.permission_set
+}

@@ -13,16 +13,54 @@ module "aws_organizations_and_sso" {
   source  = "github.com/chris-qa-org/terraform-aws-organzation-and-sso"
   version = "0.1.0"
 
+  sso_permission_sets = {
+    "admin" = {
+      description = "Administrator access",
+      relay_state = "https://console.aws.amazon.com/billing/home?region=eu-west-2#/",
+      session_duration = "PT1H", ## ISO-8601 standard (https://en.wikipedia.org/wiki/ISO_8601#Time_intervals)
+      managed_permission_sets = [
+        "AdministratorAccess"
+      ],
+      inline_policy = data.aws_iam_policy_document.example.json,
+    },
+    "read-only" = {
+      description = "Read Only",
+      relay_state = "https://console.aws.amazon.com/ec2/v2/home?region=eu-west-2#/",
+      managed_permission_sets = [
+        "AWSReadOnlyAccess"
+      ]
+    }
+  }
+
   organization_config = {
     units = {
       "organization-unit-name" = {
         accounts = {
           "new-account-name" = {
-            email = "new@example.com"
+            email = "new@example.com",
+            group_assignments = {
+              "SysAdmins" = {
+                permission_sets = [
+                  "admin"
+                ]
+              },
+              "External" = {
+                permission_sets = [
+                  "read-only"
+                ]
+              }
+            }
           },
           "existing-account-name" = {
             email                                  = "existing@example.com"
             set_iam_user_access_to_billing_setting = false  ## See `set_iam_user_access_to_billing_setting` note in [Organization config]
+            group_assignments = {
+              "SysAdmins" = {
+                permission_sets = [
+                  "admin"
+                ]
+              }
+            }
           }
         }
       }
