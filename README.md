@@ -18,7 +18,7 @@ module "aws_organizations_and_sso" {
       description = "Administrator access",
       relay_state = "https://console.aws.amazon.com/billing/home?region=eu-west-2#/",
       session_duration = "PT1H", ## ISO-8601 standard (https://en.wikipedia.org/wiki/ISO_8601#Time_intervals)
-      managed_permission_sets = [
+      managed_policies = [
         "AdministratorAccess"
       ],
       inline_policy = data.aws_iam_policy_document.example.json,
@@ -26,7 +26,7 @@ module "aws_organizations_and_sso" {
     "read-only" = {
       description = "Read Only",
       relay_state = "https://console.aws.amazon.com/ec2/v2/home?region=eu-west-2#/",
-      managed_permission_sets = [
+      managed_policies = [
         "AWSReadOnlyAccess"
       ]
     }
