@@ -41,6 +41,7 @@ jobs:
         entrypoint: terraform
         args: fmt -check=true -diff=true
   generate-terraform-docs:
+    name: Generate Terraform Docs
     needs: validate
     runs-on: ubuntu-latest
     steps:
