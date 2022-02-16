@@ -1,3 +1,8 @@
+output "aws_ssoadmin_instances" {
+  description = "Attributes for the SSO Admin instances (`aws_ssoadmin_instances`: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ssoadmin_instances)"
+  value       = data.aws_ssoadmin_instances.ssoadmin_instances
+}
+
 output "aws_organizations_organization" {
   description = "Attributes for the AWS Organization (`aws_organizations_organization`: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/organizations_organization#attributes-reference)"
   value       = aws_organizations_organization.root
