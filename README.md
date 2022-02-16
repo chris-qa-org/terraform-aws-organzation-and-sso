@@ -52,8 +52,10 @@ module "aws_organizations_and_sso" {
             }
           },
           "existing-account-name" = {
-            email                                  = "existing@example.com"
-            set_iam_user_access_to_billing_setting = false  ## See `set_iam_user_access_to_billing_setting` note in [Organization config]
+            email = "existing@example.com"
+            # If the account has been imported into terrafrom, this must be set to "NULL"
+            # This behaviour cannot be changed once the account is created (only the root user account will be able to change it)
+            iam_user_access_to_billing = "NULL"
             group_assignments = {
               "SysAdmins" = {
                 permission_sets = [
@@ -101,11 +103,11 @@ module "aws_organizations_and_sso" {
 - `organization_config.units.<org-name>.accounts.<account-name>.email`
   - Description: Email of root user
   - Value: Email of root user `string`
-- `organization_config.units.<org-name>.accounts.<account-name>.set_iam_user_access_to_billing_setting`
-  - Description: Set the `iam_user_access_to_billing` parameter to `ALLOW`
-  - Value: `true`/`fale` (`bool`)
-  - Default: true
-  - Note: This must be set to `false` if you are terraform importing an AWS account that did not have `iam_user_access_to_billing` set during creation, otherwise it will atttempt to remove the account from the Organization, and create a new account
+- `organization_config.units.<org-name>.accounts.<account-name>.iam_user_access_to_billing`
+  - Description: If set to ALLOW, the new account enables IAM users to access account billing information if they have the required permissions. If set to DENY, then only the root user of the new account can access account billing information.
+  - Value: `ALLOW`/`DENY`/`NULL` (`string`)
+  - Default: `ALLOW`
+  - Note: This must be set to "NULL" if you are terraform importing an AWS account, otherwise it will atttempt to remove the account from the Organization, and create a new account.
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
