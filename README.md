@@ -106,7 +106,7 @@ module "aws_organizations_and_sso" {
   - Description: Managed policies to associate with the permission set
   - Value: Names of AWS managed polices (`list`)
 - `sso_permission_sets.<permission-set-name>.inline_policy`
-  - Description: Inline policy to associate with the permission set
+  - Description: The IAM inline policy to attach to the Permission Set
   - Value: JSON formatted policy (`string`)
 
 ### Organization config
@@ -116,17 +116,17 @@ module "aws_organizations_and_sso" {
   - Value: Organization unit definitions (`map(any)`)
 - `organization_config.units.<org-unit-name>`
   - Description: Organization Unit definition (`map(any)`)
-  - Key: Name of child Organization to create (`string`)
+  - Key: The name for the organizational unit (`string`)
   - Value: Organization unit configuration (`map(any)`)
 - `organization_config.units.<org-unit-name>.accounts`
   - Description: Organization account definitions (`map(any)`)
   - Value: Organization account definitions `map(any)`
 - `organization_config.units.<org-unit-name>.accounts.<account-name>`
   - Description: Organization account definition (`map(any)`)
-  - Key: Name of account to create (`string`)
+  - Key: A friendly name for the member account (`string`)
   - Value: Account configuration (`map(any)`)
 - `organization_config.units.<org-name>.accounts.<account-name>.email`
-  - Description: Email of root user
+  - Description: The email address of the owner to assign to the new member account. This email address must not already be associated with another AWS account.
   - Value: Email of root user `string`
 - `organization_config.units.<org-name>.accounts.<account-name>.iam_user_access_to_billing`
   - Description: If set to ALLOW, the new account enables IAM users to access account billing information if they have the required permissions. If set to DENY, then only the root user of the new account can access account billing information.
