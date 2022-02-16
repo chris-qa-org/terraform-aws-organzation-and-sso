@@ -84,6 +84,31 @@ module "aws_organizations_and_sso" {
 }
 ```
 
+### Permission sets config
+
+- `sso_permission_sets`
+  - Description: SSO Permission Set definitions
+  - Value: SSO Permission Set definitions (`map(any)`)
+- `sso_permission_sets.<permission-set-name>`
+  - Description: SSO Permission Set definition
+  - Key: Name of SSO Permission Set definition
+  - Value: SSO Permission Set definition (`map(any)`)
+- `sso_permission_sets.<permission-set-name>.description`
+  - Description: The description of the Permission Set
+  - Value: Description (`string`)
+- `sso_permission_sets.<permission-set-name>.relay_state`
+  - Description: The relay state URL used to redirect users within the application during the federation authentication process
+  - Value: Relay state (`string`)
+- `sso_permission_sets.<permission-set-name>.session_duration`
+  - Description: The length of time that the application user sessions are valid in the ISO-8601 standard
+  - Value: Session duration (`string`)
+- `sso_permission_sets.<permission-set-name>.managed_policies`
+  - Description: Managed policies to associate with the permission set
+  - Value: Names of AWS managed polices (`list`)
+- `sso_permission_sets.<permission-set-name>.inline_policy`
+  - Description: Inline policy to associate with the permission set
+  - Value: JSON formatted policy (`string`)
+
 ### Organization config
 
 - `organization_config.units`
@@ -154,7 +179,7 @@ module "aws_organizations_and_sso" {
 | <a name="output_aws_organizations_account"></a> [aws\_organizations\_account](#output\_aws\_organizations\_account) | Attributes for the AWS Organization Accounts (`aws_organizations_account`): https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/organizations_account#attributes-reference |
 | <a name="output_aws_organizations_organization"></a> [aws\_organizations\_organization](#output\_aws\_organizations\_organization) | Attributes for the AWS Organization (`aws_organizations_organization`: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/organizations_organization#attributes-reference) |
 | <a name="output_aws_organizations_organizational_unit"></a> [aws\_organizations\_organizational\_unit](#output\_aws\_organizations\_organizational\_unit) | Atrributes for the AWS Organizational Units (`aws_organizations_organizational_unit`): https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/organizations_organizational_unit#attributes-reference |
-| <a name="output_aws_ssoadmin_permission_set"></a> [aws\_ssoadmin\_permission\_set](#output\_aws\_ssoadmin\_permission\_set) | Attributes for the AWS SSO Permition Sets (`aws_ssoadmin_permission_set`): https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssoadmin_permission_set |
+| <a name="output_aws_ssoadmin_permission_set"></a> [aws\_ssoadmin\_permission\_set](#output\_aws\_ssoadmin\_permission\_set) | Attributes for the AWS SSO Permission Sets (`aws_ssoadmin_permission_set`): https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssoadmin_permission_set |
 <!-- END_TF_DOCS -->
 
 [1]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_org.html
