@@ -44,7 +44,7 @@ resource "aws_organizations_account" "account" {
   name  = each.key
   email = each.value["email"]
 
-  iam_user_access_to_billing = lookup(each.value, "set_iam_user_access_to_billing_setting", true) ? "ALLOW" : null
+  iam_user_access_to_billing = lookup(each.value, "iam_user_access_to_billing", "ALLOW") == "NULL" ? null : lookup(each.value, "iam_user_access_to_billing", "ALLOW")
 
   parent_id = aws_organizations_organizational_unit.unit[each.value["org_unit_name"]].id
 
