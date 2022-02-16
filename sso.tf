@@ -33,16 +33,16 @@ resource "aws_ssoadmin_managed_policy_attachment" "attachment" {
   for_each = {
     for attachment in flatten([
       for permission_set_name, permission_set in local.sso_permission_sets : {
-        for managed_permission_set_name in lookup(permission_set, "managed_permission_sets", []) : "${permission_set_name}_${managed_permission_set_name}" => {
-          permission_set_name         = permission_set_name
-          managed_permission_set_name = managed_permission_set_name
+        for managed_policy_name in lookup(permission_set, "managed_policies", []) : "${permission_set_name}_${managed_policy_name}" => {
+          permission_set_name = permission_set_name
+          managed_policy_name = managed_policy_name
         }
       }
     ]) : keys(attachment)[0] => attachment[keys(attachment)[0]]
   }
 
   instance_arn       = tolist(data.aws_ssoadmin_instances.ssoadmin_instances.arns)[0]
-  managed_policy_arn = "arn:aws:iam::aws:policy/${each.value["managed_permission_set_name"]}"
+  managed_policy_arn = "arn:aws:iam::aws:policy/${each.value["managed_policy_name"]}"
   permission_set_arn = aws_ssoadmin_permission_set.permission_set[each.value["permission_set_name"]].arn
 }
 
