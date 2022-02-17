@@ -3,7 +3,7 @@
 This module creates an [AWS Organization][1], [Organization units][2] and [Accounts][3].  
 The aim is for it to also create and manage [AWS SSO (AWS Single Sign-on)][4]
 
-[![Terraform CI](https://github.com/chris-qa-org/terraform-aws-organzation-and-sso/actions/workflows/main.yml/badge.svg)](https://github.com/chris-qa-org/terraform-aws-organzation-and-sso/actions/workflows/main.yml)
+[![Terraform CI](https://github.com/chris-qa-org/terraform-aws-organzation-and-sso/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/chris-qa-org/terraform-aws-organzation-and-sso/actions/workflows/main.yml?branch=main)
 ![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/chris-qa-org/terraform-aws-organzation-and-sso)
 
 ## Usage
