@@ -11,7 +11,7 @@ The aim is for it to also create and manage [AWS SSO (AWS Single Sign-on)][4]
 ```hcl
 module "aws_organizations_and_sso" {
   source  = "github.com/chris-qa-org/terraform-aws-organzation-and-sso"
-  version = "0.1.0"
+  version = "0.3.0"
 
   sso_permission_sets = {
     "admin" = {
