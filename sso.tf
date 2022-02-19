@@ -7,7 +7,7 @@ data "aws_identitystore_group" "aws" {
         for unit_name, unit in local.organization_config["units"] : [
           for account_name in keys(local.organization_config["units"][unit_name]["accounts"]) : local.organization_config["units"][unit_name]["accounts"][account_name]
         ]
-      ]) : keys(account["group_assignments"])
+      ]) : keys(lookup(account, "group_assignments", {}))
     ])
   ) : toset([])
 
@@ -26,7 +26,7 @@ data "aws_identitystore_user" "aws" {
         for unit_name, unit in local.organization_config["units"] : [
           for account_name in keys(local.organization_config["units"][unit_name]["accounts"]) : local.organization_config["units"][unit_name]["accounts"][account_name]
         ]
-      ]) : keys(account["user_assignments"])
+      ]) : keys(lookup(account, "user_assignments", {}))
     ])
   ) : toset([])
 
@@ -82,8 +82,8 @@ resource "aws_ssoadmin_account_assignment" "group_assignment" {
     for assignment in flatten([
       for unit_name, unit in local.organization_config["units"] : [
         for account_name in keys(local.organization_config["units"][unit_name]["accounts"]) : [
-          for group_name, group_assignments in local.organization_config["units"][unit_name]["accounts"][account_name]["group_assignments"] : {
-            for permission_set in local.organization_config["units"][unit_name]["accounts"][account_name]["group_assignments"][group_name]["permission_sets"] : "${account_name}_${group_name}_${permission_set}" => {
+          for group_name, group_assignments in lookup(local.organization_config["units"][unit_name]["accounts"][account_name], "group_assignments", {}) : {
+            for permission_set in group_assignments["permission_sets"] : "${account_name}_${group_name}_${permission_set}" => {
               account_name   = account_name
               group_name     = group_name
               permission_set = permission_set
@@ -109,8 +109,8 @@ resource "aws_ssoadmin_account_assignment" "user_assignment" {
     for assignment in flatten([
       for unit_name, unit in local.organization_config["units"] : [
         for account_name in keys(local.organization_config["units"][unit_name]["accounts"]) : [
-          for user_name, user_assignments in local.organization_config["units"][unit_name]["accounts"][account_name]["user_assignments"] : {
-            for permission_set in local.organization_config["units"][unit_name]["accounts"][account_name]["user_assignments"][user_name]["permission_sets"] : "${account_name}_${user_name}_${permission_set}" => {
+          for user_name, user_assignments in lookup(local.organization_config["units"][unit_name]["accounts"][account_name], "user_assignments", {}) : {
+            for permission_set in user_assignments["permission_sets"] : "${account_name}_${user_name}_${permission_set}" => {
               account_name   = account_name
               user_name      = user_name
               permission_set = permission_set
