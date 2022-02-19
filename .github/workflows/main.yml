@@ -3,8 +3,8 @@ name: Terraform CI
 on: push
 
 jobs:
-  validate:
-    name: Validate
+  validate-terraform:
+    name: Validate Terraform
     runs-on: ubuntu-latest
     steps:
     - name: Check out code
@@ -37,9 +37,9 @@ jobs:
       with:
         entrypoint: terraform
         args: fmt -check=true -diff=true
-  generate-terraform-docs:
-    name: Generate Terraform Docs
-    needs: validate
+  validate-terraform-docs:
+    name: Validate Terraform Docs
+    needs: validate-terraform
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
