@@ -1,7 +1,7 @@
 data "aws_ssoadmin_instances" "ssoadmin_instances" {}
 
 data "aws_identitystore_group" "aws" {
-  for_each = toset(
+  for_each = local.enable_sso ? toset(
     flatten([
       for account in flatten([
         for unit_name, unit in local.organization_config["units"] : [
@@ -9,7 +9,7 @@ data "aws_identitystore_group" "aws" {
         ]
       ]) : keys(account["group_assignments"])
     ])
-  )
+  ) : toset([])
 
   identity_store_id = tolist(data.aws_ssoadmin_instances.ssoadmin_instances.identity_store_ids)[0]
 
@@ -20,7 +20,7 @@ data "aws_identitystore_group" "aws" {
 }
 
 resource "aws_ssoadmin_permission_set" "permission_set" {
-  for_each = local.sso_permission_sets
+  for_each = local.enable_sso ? local.sso_permission_sets : {}
 
   instance_arn     = tolist(data.aws_ssoadmin_instances.ssoadmin_instances.arns)[0]
   name             = each.key
@@ -30,7 +30,7 @@ resource "aws_ssoadmin_permission_set" "permission_set" {
 }
 
 resource "aws_ssoadmin_managed_policy_attachment" "attachment" {
-  for_each = {
+  for_each = local.enable_sso ? {
     for attachment in flatten([
       for permission_set_name, permission_set in local.sso_permission_sets : {
         for managed_policy_name in lookup(permission_set, "managed_policies", []) : "${permission_set_name}_${managed_policy_name}" => {
@@ -39,7 +39,7 @@ resource "aws_ssoadmin_managed_policy_attachment" "attachment" {
         }
       }
     ]) : keys(attachment)[0] => attachment[keys(attachment)[0]]
-  }
+  } : {}
 
   instance_arn       = tolist(data.aws_ssoadmin_instances.ssoadmin_instances.arns)[0]
   managed_policy_arn = "arn:aws:iam::aws:policy/${each.value["managed_policy_name"]}"
@@ -47,11 +47,11 @@ resource "aws_ssoadmin_managed_policy_attachment" "attachment" {
 }
 
 resource "aws_ssoadmin_permission_set_inline_policy" "policy" {
-  for_each = {
+  for_each = local.enable_sso ? {
     for permission_set_name in flatten([
       for permission_set_name, permission_set in local.sso_permission_sets : permission_set_name if lookup(local.sso_permission_sets[permission_set_name], "inline_policy", "") != ""
     ]) : permission_set_name => local.sso_permission_sets[permission_set_name]["inline_policy"]
-  }
+  } : {}
 
   inline_policy      = each.value
   instance_arn       = aws_ssoadmin_permission_set.permission_set[each.key].instance_arn
@@ -59,7 +59,7 @@ resource "aws_ssoadmin_permission_set_inline_policy" "policy" {
 }
 
 resource "aws_ssoadmin_account_assignment" "assignment" {
-  for_each = {
+  for_each = local.enable_sso ? {
     for assignment in flatten([
       for unit_name, unit in local.organization_config["units"] : [
         for account_name in keys(local.organization_config["units"][unit_name]["accounts"]) : [
@@ -73,7 +73,7 @@ resource "aws_ssoadmin_account_assignment" "assignment" {
         ]
       ]
     ]) : keys(assignment)[0] => assignment[keys(assignment)[0]]
-  }
+  } : {}
 
   instance_arn       = aws_ssoadmin_permission_set.permission_set[each.value["permission_set"]].instance_arn
   permission_set_arn = aws_ssoadmin_permission_set.permission_set[each.value["permission_set"]].arn
