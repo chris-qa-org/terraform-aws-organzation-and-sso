@@ -6,7 +6,7 @@ This is because it can only be set during account creation
 ```
 module "aws_organizations_and_sso" {
   source  = "chris-qa-org/organzation-and-sso/aws"
-  version = "0.4.1"
+  version = "1.0.0"
 
   region = "eu-west-2"
 
