@@ -5,7 +5,7 @@ The permission sets can then be assigned to users or groups in an account with `
 
 ```
 module "aws_organizations_and_sso" {
-  source  = "github.com/chris-qa-org/terraform-aws-organzation-and-sso"
+  source  = "chris-qa-org/organzation-and-sso/aws"
   version = "0.4.1"
 
   region = "eu-west-2"
