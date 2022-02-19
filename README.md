@@ -29,6 +29,13 @@ module "aws_organizations_and_sso" {
       managed_policies = [
         "AWSReadOnlyAccess"
       ]
+    },
+    "billing" = {
+      description = "Billing Access",
+      relay_state = "https://console.aws.amazon.com/billing/home?#/",
+      managed_policies = [
+        "job-function/Billing"
+      ]
     }
   }
 
@@ -50,6 +57,13 @@ module "aws_organizations_and_sso" {
                 ]
               }
             }
+            user_assignments = {
+              "Alex" = {
+                permission_sets = [
+                  "billing"
+                ]
+              }
+            }
           },
           "existing-account-name" = {
             email = "existing@example.com"
@@ -60,6 +74,13 @@ module "aws_organizations_and_sso" {
               "SysAdmins" = {
                 permission_sets = [
                   "admin"
+                ]
+              }
+            }
+            user_assignments = {
+              "Alex" = {
+                permission_sets = [
+                  "billing"
                 ]
               }
             }
@@ -155,11 +176,13 @@ module "aws_organizations_and_sso" {
 | [aws_organizations_account.account](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/organizations_account) | resource |
 | [aws_organizations_organization.root](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/organizations_organization) | resource |
 | [aws_organizations_organizational_unit.unit](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/organizations_organizational_unit) | resource |
-| [aws_ssoadmin_account_assignment.assignment](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssoadmin_account_assignment) | resource |
+| [aws_ssoadmin_account_assignment.group_assignment](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssoadmin_account_assignment) | resource |
+| [aws_ssoadmin_account_assignment.user_assignment](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssoadmin_account_assignment) | resource |
 | [aws_ssoadmin_managed_policy_attachment.attachment](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssoadmin_managed_policy_attachment) | resource |
 | [aws_ssoadmin_permission_set.permission_set](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssoadmin_permission_set) | resource |
 | [aws_ssoadmin_permission_set_inline_policy.policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssoadmin_permission_set_inline_policy) | resource |
 | [aws_identitystore_group.aws](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/identitystore_group) | data source |
+| [aws_identitystore_user.aws](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/identitystore_user) | data source |
 | [aws_ssoadmin_instances.ssoadmin_instances](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ssoadmin_instances) | data source |
 
 ## Inputs

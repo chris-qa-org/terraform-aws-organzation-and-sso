@@ -19,6 +19,25 @@ data "aws_identitystore_group" "aws" {
   }
 }
 
+data "aws_identitystore_user" "aws" {
+  for_each = local.enable_sso ? toset(
+    flatten([
+      for account in flatten([
+        for unit_name, unit in local.organization_config["units"] : [
+          for account_name in keys(local.organization_config["units"][unit_name]["accounts"]) : local.organization_config["units"][unit_name]["accounts"][account_name]
+        ]
+      ]) : keys(account["user_assignments"])
+    ])
+  ) : toset([])
+
+  identity_store_id = tolist(data.aws_ssoadmin_instances.ssoadmin_instances.identity_store_ids)[0]
+
+  filter {
+    attribute_path  = "UserName"
+    attribute_value = each.key
+  }
+}
+
 resource "aws_ssoadmin_permission_set" "permission_set" {
   for_each = local.enable_sso ? local.sso_permission_sets : {}
 
@@ -58,7 +77,7 @@ resource "aws_ssoadmin_permission_set_inline_policy" "policy" {
   permission_set_arn = aws_ssoadmin_permission_set.permission_set[each.key].arn
 }
 
-resource "aws_ssoadmin_account_assignment" "assignment" {
+resource "aws_ssoadmin_account_assignment" "group_assignment" {
   for_each = local.enable_sso ? {
     for assignment in flatten([
       for unit_name, unit in local.organization_config["units"] : [
@@ -80,6 +99,33 @@ resource "aws_ssoadmin_account_assignment" "assignment" {
 
   principal_id   = data.aws_identitystore_group.aws[each.value["group_name"]].group_id
   principal_type = "GROUP"
+
+  target_id   = aws_organizations_account.account[each.value["account_name"]].id
+  target_type = "AWS_ACCOUNT"
+}
+
+resource "aws_ssoadmin_account_assignment" "user_assignment" {
+  for_each = local.enable_sso ? {
+    for assignment in flatten([
+      for unit_name, unit in local.organization_config["units"] : [
+        for account_name in keys(local.organization_config["units"][unit_name]["accounts"]) : [
+          for user_name, user_assignments in local.organization_config["units"][unit_name]["accounts"][account_name]["user_assignments"] : {
+            for permission_set in local.organization_config["units"][unit_name]["accounts"][account_name]["user_assignments"][user_name]["permission_sets"] : "${account_name}_${user_name}_${permission_set}" => {
+              account_name   = account_name
+              user_name      = user_name
+              permission_set = permission_set
+            }
+          }
+        ]
+      ]
+    ]) : keys(assignment)[0] => assignment[keys(assignment)[0]]
+  } : {}
+
+  instance_arn       = aws_ssoadmin_permission_set.permission_set[each.value["permission_set"]].instance_arn
+  permission_set_arn = aws_ssoadmin_permission_set.permission_set[each.value["permission_set"]].arn
+
+  principal_id   = data.aws_identitystore_user.aws[each.value["user_name"]].user_id
+  principal_type = "USER"
 
   target_id   = aws_organizations_account.account[each.value["account_name"]].id
   target_type = "AWS_ACCOUNT"
