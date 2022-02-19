@@ -1,7 +1,7 @@
 # AWS Organization and SSO terraform module
 
 [![Terraform CI](https://github.com/chris-qa-org/terraform-aws-organzation-and-sso/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/chris-qa-org/terraform-aws-organzation-and-sso/actions/workflows/main.yml?branch=main)
-![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/chris-qa-org/terraform-aws-organzation-and-sso)
+[![GitHub release](https://img.shields.io/github/release/chris-qa-org/terraform-aws-organzation-and-sso.svg)](https://github.com/chris-qa-org/terraform-aws-organzation-and-sso/releases/)
 
 This module creates and manages [AWS Organizations][1], [Organization units][2], [Accounts][3], [SSO Permission sets][5] and group/user assignments.
 
