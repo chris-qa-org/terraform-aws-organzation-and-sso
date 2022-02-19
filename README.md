@@ -1,10 +1,14 @@
 # AWS Organization and SSO terraform module
 
-This module creates an [AWS Organization][1], [Organization units][2] and [Accounts][3].  
-The aim is for it to also create and manage [AWS SSO (AWS Single Sign-on)][4]
-
 [![Terraform CI](https://github.com/chris-qa-org/terraform-aws-organzation-and-sso/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/chris-qa-org/terraform-aws-organzation-and-sso/actions/workflows/main.yml?branch=main)
 ![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/chris-qa-org/terraform-aws-organzation-and-sso)
+
+This module creates and manages [AWS Organizations][1], [Organization units][2], [Accounts][3], [SSO Permission sets][5] and group/user assignments.
+
+## Limitations
+
+- Identity store Users and Groups must be created manually, as the identity store api does not currently support creating users or groups (https://github.com/hashicorp/terraform-provider-aws/issues/18812)
+- SSO must be enabled manually
 
 ## Usage
 
@@ -154,6 +158,36 @@ module "aws_organizations_and_sso" {
   - Value: `ALLOW`/`DENY`/`NULL` (`string`)
   - Default: `ALLOW`
   - Note: This must be set to "NULL" if you are terraform importing an AWS account, otherwise it will atttempt to remove the account from the Organization, and create a new account.
+- `organization_config.units.<org-name>.accounts.<account-name>.group_assignments`
+  - Description: Group assignment definitions.
+  - Value: Group assignment definition (`map`)
+- `organization_config.units.<org-name>.accounts.<account-name>.group_assignments.<group_name>`
+  - Description: Group assignment definition
+  - Key: Group name
+  - Value: Group assignment config (`map`)
+- `organization_config.units.<org-name>.accounts.<account-name>.group_assignments.<group_name>.permission_sets`
+  - Description: Group assignment definition
+  - Value: Permission set names (`list`)
+- `organization_config.units.<org-name>.accounts.<account-name>.user_assignments`
+  - Description: User assignment definitions.
+  - Value: User assignment definition (`map`)
+- `organization_config.units.<org-name>.accounts.<account-name>.user_assignments.<user_name>`
+  - Description: User assignment definition
+  - Key: User name
+  - Value: User assignment config (`map`)
+- `organization_config.units.<org-name>.accounts.<account-name>.group_assignments.<user_name>.permission_sets`
+  - Description: User assignment definition
+  - Value: Permission set names (`list`)
+- `organization_config.service_access_principals`
+  - Description: List of AWS service principal names for which you want to enable integration with your organization. This is typically in the form of a URL, such as service-abbreviation.amazonaws.com. Organization must have feature_set set to ALL.
+  - Value: Service access principals (`list`)
+- `organization_config.feature_set`
+  - Description: Specify "ALL" or "CONSOLIDATED_BILLING".
+  - Value: Feature set (`string`)
+- `organization_config.enabled_policy_types`
+  - Description: List of Organizations policy types to enable in the Organization Root. Organization must have feature_set set to ALL. For additional information about valid policy types
+  - Value: Enabled policy types (`list`)
+
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
@@ -210,3 +244,4 @@ module "aws_organizations_and_sso" {
 [2]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_ous.html
 [3]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts.html
 [4]: https://docs.aws.amazon.com/singlesignon/latest/userguide/what-is.html
+[5]: https://docs.aws.amazon.com/singlesignon/latest/userguide/permissionsetsconcept.html
