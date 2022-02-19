@@ -15,7 +15,7 @@ This module creates and manages [AWS Organizations][1], [Organization units][2],
 ```hcl
 module "aws_organizations_and_sso" {
   source  = "github.com/chris-qa-org/terraform-aws-organzation-and-sso"
-  version = "0.3.0"
+  version = "0.4.1"
 
   sso_permission_sets = {
     "admin" = {
