@@ -8,8 +8,6 @@ module "aws_organizations_and_sso" {
   source  = "chris-qa-org/organzation-and-sso/aws"
   version = "1.0.1"
 
-  region = "eu-west-2"
-
   organization_config = {
     units = {
       "my-org-unit" = {
