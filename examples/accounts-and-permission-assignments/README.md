@@ -6,7 +6,7 @@ The permission sets can then be assigned to users or groups in an account with `
 ```
 module "aws_organizations_and_sso" {
   source  = "chris-qa-org/organzation-and-sso/aws"
-  version = "1.0.1"
+  version = "1.1.0"
 
   sso_permission_sets = {
     "AdministratorAccess" = {
