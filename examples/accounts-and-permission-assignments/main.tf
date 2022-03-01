@@ -1,6 +1,6 @@
 module "aws_organizations_and_sso" {
   source  = "chris-qa-org/organzation-and-sso/aws"
-  version = "1.1.0"
+  version = "1.1.1"
 
   sso_permission_sets = {
     "AdministratorAccess" = {
