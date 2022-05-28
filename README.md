@@ -15,7 +15,7 @@ This module creates and manages [AWS Organizations][1], [Organization units][2],
 ```hcl
 module "aws_organizations_and_sso" {
   source  = "chris-qa-org/organzation-and-sso/aws"
-  version = "1.1.1"
+  version = "1.1.2"
 
   sso_permission_sets = {
     "admin" = {
