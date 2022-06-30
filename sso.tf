@@ -39,7 +39,7 @@ data "aws_identitystore_user" "aws" {
 }
 
 resource "aws_ssoadmin_permission_set" "permission_set" {
-  for_each = local.enable_sso ? local.sso_permission_sets : {}
+  for_each = local.enable_sso ? local.sso_permission_sets : null
 
   instance_arn     = tolist(data.aws_ssoadmin_instances.ssoadmin_instances.arns)[0]
   name             = each.key
