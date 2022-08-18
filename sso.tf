@@ -3,11 +3,7 @@ data "aws_ssoadmin_instances" "ssoadmin_instances" {}
 data "aws_identitystore_group" "aws" {
   for_each = local.enable_sso ? toset(
     flatten([
-      for account in flatten([
-        for unit_name, unit in local.organization_config["units"] : [
-          for account_name in keys(local.organization_config["units"][unit_name]["accounts"]) : local.organization_config["units"][unit_name]["accounts"][account_name]
-        ]
-      ]) : keys(lookup(account, "group_assignments", {}))
+      for account in local.accounts : keys(lookup(account, "group_assignments", {}))
     ])
   ) : toset([])
 
@@ -22,11 +18,7 @@ data "aws_identitystore_group" "aws" {
 data "aws_identitystore_user" "aws" {
   for_each = local.enable_sso ? toset(
     flatten([
-      for account in flatten([
-        for unit_name, unit in local.organization_config["units"] : [
-          for account_name in keys(local.organization_config["units"][unit_name]["accounts"]) : local.organization_config["units"][unit_name]["accounts"][account_name]
-        ]
-      ]) : keys(lookup(account, "user_assignments", {}))
+      for account in local.accounts : keys(lookup(account, "user_assignments", {}))
     ])
   ) : toset([])
 
