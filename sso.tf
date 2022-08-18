@@ -68,8 +68,7 @@ resource "aws_ssoadmin_permission_set_inline_policy" "policy" {
 }
 
 resource "aws_ssoadmin_account_assignment" "group_assignment" {
-  for_each = local.enable_sso ? {
-    for assignment in flatten([
+  for_each = local.enable_sso ? merge(flatten([
       for unit_name, unit in local.organization_config["units"] : [
         for account_name in keys(local.organization_config["units"][unit_name]["accounts"]) : [
           for group_name, group_assignments in lookup(local.organization_config["units"][unit_name]["accounts"][account_name], "group_assignments", {}) : {
@@ -81,8 +80,7 @@ resource "aws_ssoadmin_account_assignment" "group_assignment" {
           }
         ]
       ]
-    ]) : keys(assignment)[0] => assignment[keys(assignment)[0]]
-  } : {}
+    ])...) : {}
 
   instance_arn       = aws_ssoadmin_permission_set.permission_set[each.value["permission_set"]].instance_arn
   permission_set_arn = aws_ssoadmin_permission_set.permission_set[each.value["permission_set"]].arn
@@ -95,8 +93,7 @@ resource "aws_ssoadmin_account_assignment" "group_assignment" {
 }
 
 resource "aws_ssoadmin_account_assignment" "user_assignment" {
-  for_each = local.enable_sso ? {
-    for assignment in flatten([
+  for_each = local.enable_sso ? merge(flatten([
       for unit_name, unit in local.organization_config["units"] : [
         for account_name in keys(local.organization_config["units"][unit_name]["accounts"]) : [
           for user_name, user_assignments in lookup(local.organization_config["units"][unit_name]["accounts"][account_name], "user_assignments", {}) : {
@@ -108,8 +105,7 @@ resource "aws_ssoadmin_account_assignment" "user_assignment" {
           }
         ]
       ]
-    ]) : keys(assignment)[0] => assignment[keys(assignment)[0]]
-  } : {}
+    ])...) : {}
 
   instance_arn       = aws_ssoadmin_permission_set.permission_set[each.value["permission_set"]].instance_arn
   permission_set_arn = aws_ssoadmin_permission_set.permission_set[each.value["permission_set"]].arn
