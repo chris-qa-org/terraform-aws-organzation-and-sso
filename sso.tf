@@ -41,16 +41,14 @@ resource "aws_ssoadmin_permission_set" "permission_set" {
 }
 
 resource "aws_ssoadmin_managed_policy_attachment" "attachment" {
-  for_each = local.enable_sso ? {
-    for attachment in flatten([
+  for_each = local.enable_sso ? merge([
       for permission_set_name, permission_set in local.sso_permission_sets : {
-        for managed_policy_name in lookup(permission_set, "managed_policies", []) : "${permission_set_name}_${managed_policy_name}" => {
+        for managed_policy_name in permission_set["managed_policies"] : "${permission_set_name}_${managed_policy_name}" => {
           permission_set_name = permission_set_name
           managed_policy_name = managed_policy_name
         }
       }
-    ]) : keys(attachment)[0] => attachment[keys(attachment)[0]]
-  } : {}
+    ]...) : {}
 
   instance_arn       = tolist(data.aws_ssoadmin_instances.ssoadmin_instances.arns)[0]
   managed_policy_arn = "arn:aws:iam::aws:policy/${each.value["managed_policy_name"]}"
