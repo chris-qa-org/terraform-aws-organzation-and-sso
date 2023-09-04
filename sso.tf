@@ -9,9 +9,11 @@ data "aws_identitystore_group" "aws" {
 
   identity_store_id = tolist(data.aws_ssoadmin_instances.ssoadmin_instances.identity_store_ids)[0]
 
-  filter {
-    attribute_path  = "DisplayName"
-    attribute_value = each.key
+  alternate_identifier {
+    unique_attribute {
+      attribute_path  = "DisplayName"
+      attribute_value = each.key
+    }
   }
 }
 
@@ -24,9 +26,11 @@ data "aws_identitystore_user" "aws" {
 
   identity_store_id = tolist(data.aws_ssoadmin_instances.ssoadmin_instances.identity_store_ids)[0]
 
-  filter {
-    attribute_path  = "UserName"
-    attribute_value = each.key
+  alternate_identifier {
+    unique_attribute {
+      attribute_path  = "UserName"
+      attribute_value = each.key
+    }
   }
 }
 
