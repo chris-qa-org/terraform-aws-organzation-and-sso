@@ -3,38 +3,34 @@ data "aws_ssoadmin_instances" "ssoadmin_instances" {}
 data "aws_identitystore_group" "aws" {
   for_each = local.enable_sso ? toset(
     flatten([
-      for account in flatten([
-        for unit_name, unit in local.organization_config["units"] : [
-          for account_name in keys(local.organization_config["units"][unit_name]["accounts"]) : local.organization_config["units"][unit_name]["accounts"][account_name]
-        ]
-      ]) : keys(lookup(account, "group_assignments", {}))
+      for account in local.accounts : keys(lookup(account, "group_assignments", {}))
     ])
   ) : toset([])
 
   identity_store_id = tolist(data.aws_ssoadmin_instances.ssoadmin_instances.identity_store_ids)[0]
 
-  filter {
-    attribute_path  = "DisplayName"
-    attribute_value = each.key
+  alternate_identifier {
+    unique_attribute {
+      attribute_path  = "DisplayName"
+      attribute_value = each.key
+    }
   }
 }
 
 data "aws_identitystore_user" "aws" {
   for_each = local.enable_sso ? toset(
     flatten([
-      for account in flatten([
-        for unit_name, unit in local.organization_config["units"] : [
-          for account_name in keys(local.organization_config["units"][unit_name]["accounts"]) : local.organization_config["units"][unit_name]["accounts"][account_name]
-        ]
-      ]) : keys(lookup(account, "user_assignments", {}))
+      for account in local.accounts : keys(lookup(account, "user_assignments", {}))
     ])
   ) : toset([])
 
   identity_store_id = tolist(data.aws_ssoadmin_instances.ssoadmin_instances.identity_store_ids)[0]
 
-  filter {
-    attribute_path  = "UserName"
-    attribute_value = each.key
+  alternate_identifier {
+    unique_attribute {
+      attribute_path  = "UserName"
+      attribute_value = each.key
+    }
   }
 }
 
@@ -49,16 +45,14 @@ resource "aws_ssoadmin_permission_set" "permission_set" {
 }
 
 resource "aws_ssoadmin_managed_policy_attachment" "attachment" {
-  for_each = local.enable_sso ? {
-    for attachment in flatten([
+  for_each = local.enable_sso ? merge([
       for permission_set_name, permission_set in local.sso_permission_sets : {
-        for managed_policy_name in lookup(permission_set, "managed_policies", []) : "${permission_set_name}_${managed_policy_name}" => {
+        for managed_policy_name in permission_set["managed_policies"] : "${permission_set_name}_${managed_policy_name}" => {
           permission_set_name = permission_set_name
           managed_policy_name = managed_policy_name
         }
       }
-    ]) : keys(attachment)[0] => attachment[keys(attachment)[0]]
-  } : {}
+    ]...) : {}
 
   instance_arn       = tolist(data.aws_ssoadmin_instances.ssoadmin_instances.arns)[0]
   managed_policy_arn = "arn:aws:iam::aws:policy/${each.value["managed_policy_name"]}"
@@ -78,8 +72,7 @@ resource "aws_ssoadmin_permission_set_inline_policy" "policy" {
 }
 
 resource "aws_ssoadmin_account_assignment" "group_assignment" {
-  for_each = local.enable_sso ? {
-    for assignment in flatten([
+  for_each = local.enable_sso ? merge(flatten([
       for unit_name, unit in local.organization_config["units"] : [
         for account_name in keys(local.organization_config["units"][unit_name]["accounts"]) : [
           for group_name, group_assignments in lookup(local.organization_config["units"][unit_name]["accounts"][account_name], "group_assignments", {}) : {
@@ -91,8 +84,7 @@ resource "aws_ssoadmin_account_assignment" "group_assignment" {
           }
         ]
       ]
-    ]) : keys(assignment)[0] => assignment[keys(assignment)[0]]
-  } : {}
+    ])...) : {}
 
   instance_arn       = aws_ssoadmin_permission_set.permission_set[each.value["permission_set"]].instance_arn
   permission_set_arn = aws_ssoadmin_permission_set.permission_set[each.value["permission_set"]].arn
@@ -105,8 +97,7 @@ resource "aws_ssoadmin_account_assignment" "group_assignment" {
 }
 
 resource "aws_ssoadmin_account_assignment" "user_assignment" {
-  for_each = local.enable_sso ? {
-    for assignment in flatten([
+  for_each = local.enable_sso ? merge(flatten([
       for unit_name, unit in local.organization_config["units"] : [
         for account_name in keys(local.organization_config["units"][unit_name]["accounts"]) : [
           for user_name, user_assignments in lookup(local.organization_config["units"][unit_name]["accounts"][account_name], "user_assignments", {}) : {
@@ -118,8 +109,7 @@ resource "aws_ssoadmin_account_assignment" "user_assignment" {
           }
         ]
       ]
-    ]) : keys(assignment)[0] => assignment[keys(assignment)[0]]
-  } : {}
+    ])...) : {}
 
   instance_arn       = aws_ssoadmin_permission_set.permission_set[each.value["permission_set"]].instance_arn
   permission_set_arn = aws_ssoadmin_permission_set.permission_set[each.value["permission_set"]].arn
