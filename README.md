@@ -73,6 +73,7 @@ module "aws_organizations_and_sso" {
             email = "existing@example.com"
             # If the account has been imported into terrafrom, this must be set to "NULL"
             # This behaviour cannot be changed once the account is created (only the root user account will be able to change it)
+            # (Terraform import example can be found at https://github.com/chris-qa-org/terraform-aws-organzation-and-sso/blob/main/examples/existing-account-import/README.md)
             iam_user_access_to_billing = "NULL"
             group_assignments = {
               "SysAdmins" = {
